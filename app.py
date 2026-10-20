@@ -202,6 +202,10 @@ def index():
     records = load_records()
     review = load_review()
     open_items = [r for r in review if not r.get("decision")]
+    open_files = {r["file"] for r in open_items}
+    for rec in records:   # a document is "reviewed" once none of its items are open
+        if rec.get("status") == "needs_review" and rec["file"] not in open_files:
+            rec["status"] = "reviewed"
     failed = []
     for p in sorted(FAILED.glob("*.pdf")):
         e = FAILED / f"{p.stem}.error.txt"
