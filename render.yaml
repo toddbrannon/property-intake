@@ -31,3 +31,5 @@ services:
         sync: false            # Render asks you for this at deploy time; leave blank for samples-only
       - key: APP_PASSWORD
         sync: false            # a password for the page; leave blank for no password
+      - key: SECRET_KEY
+        generateValue: true    # signs the login cookie; Render generates it

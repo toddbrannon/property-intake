@@ -45,14 +45,42 @@ def start_watcher():
     threading.Thread(target=loop, daemon=True).start()
 start_watcher()
 
-# ---------------------------------------------------------------- optional password
+# ---------------------------------------------------------------- optional password (login form + cookie)
+import hashlib, secrets
+from flask import session
+app.secret_key = os.environ.get("SECRET_KEY") or hashlib.sha256(("intake:" + PASSWORD).encode()).hexdigest()
+
+LOGIN = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Property Intake - sign in</title>
+<style>body{margin:0;background:#f3f4f7;font:15px system-ui,sans-serif;color:#1c2030;display:flex;min-height:100vh;align-items:center;justify-content:center}
+form{background:#fff;border:1px solid #d3d7e1;padding:28px 32px;min-width:280px}h1{font-size:18px;margin:0 0 14px}
+input{font:inherit;padding:8px 10px;border:1px solid #d3d7e1;border-radius:3px;width:100%;box-sizing:border-box;margin-bottom:12px}
+button{font:inherit;padding:8px 16px;border:0;background:#2b3f7a;color:#fff;border-radius:3px;cursor:pointer}.err{color:#b8321c;margin-bottom:10px}</style></head>
+<body><form method="post"><h1>Property Intake</h1>{% if err %}<div class="err">{{ err }}</div>{% endif %}
+<input type="password" name="password" placeholder="Password" autofocus><button>Sign in</button></form></body></html>"""
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if not PASSWORD:
+        return redirect(url_for("index"))
+    err = None
+    if request.method == "POST":
+        if secrets.compare_digest(request.form.get("password", ""), PASSWORD):
+            session["ok"] = True
+            return redirect(url_for("index"))
+        err = "Wrong password."
+    return render_template_string(LOGIN, err=err)
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("login"))
+
 def protected(f):
     @wraps(f)
     def inner(*a, **kw):
-        if PASSWORD:
-            auth = request.authorization
-            if not auth or auth.password != PASSWORD:
-                return Response("Password required", 401, {"WWW-Authenticate": 'Basic realm="property-intake"'})
+        if PASSWORD and not session.get("ok"):
+            return redirect(url_for("login"))
         return f(*a, **kw)
     return inner
 
@@ -129,7 +157,7 @@ PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
  <button class="btn" type="submit">Upload PDF</button>
  <span class="muted">Waiting in inbox: {{ inbox|length }} · Failed: {{ failed|length }}</span>
  <a class="btn sec" href="{{ url_for('download') }}">Download master.xlsx</a>
- <a class="btn sec" href="{{ url_for('index') }}">Refresh</a>
+ <a class="btn sec" href="{{ url_for('index') }}">Refresh</a>{% if pw %} <a class="btn sec" href="{{ url_for('logout') }}">Sign out</a>{% endif %}
 </form>
 {% if not has_key %}<div class="muted" style="margin-top:8px">No API key set: the three sample documents work; other PDFs will go to Failed until <code>ANTHROPIC_API_KEY</code> is added in Render → Environment.</div>{% endif %}
 </div>
@@ -183,7 +211,7 @@ def index():
     return render_template_string(PAGE, records=records, open_items=open_items, failed=failed,
         inbox=list(INBOX.glob("*.pdf")), samples=samples, msg=request.args.get("msg"),
         labels={k: v["ja"] for k, v in _fields.items()}, labels_en={k: v["en"] for k, v in _fields.items()},
-        has_key=bool(os.environ.get("ANTHROPIC_API_KEY")),
+        has_key=bool(os.environ.get("ANTHROPIC_API_KEY")), pw=bool(PASSWORD),
         mode="Claude API" if os.environ.get("ANTHROPIC_API_KEY") else "samples only (no API key)")
 
 @app.route("/upload", methods=["POST"])
