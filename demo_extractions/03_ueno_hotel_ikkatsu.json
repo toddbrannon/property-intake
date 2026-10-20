@@ -1,0 +1,164 @@
+{
+ "property_name": {
+  "value": "ホテル・グリーンリーフ上野",
+  "page": 1,
+  "confidence": "high",
+  "source": "ホテル・グリーンリーフ上野（運営中・オーナーチェンジ）"
+ },
+ "property_type": {
+  "value": "一棟ホテル",
+  "page": 1,
+  "confidence": "high",
+  "source": "一棟ホテル（簡易宿所→旅館業許可取得済）"
+ },
+ "address": {
+  "value": "東京都台東区東上野四丁目",
+  "page": 1,
+  "confidence": "high",
+  "source": "東京都台東区東上野四丁目○番○"
+ },
+ "nearest_station": {
+  "value": "上野駅 入谷口（JR山手線ほか）",
+  "page": 1,
+  "confidence": "high",
+  "source": "JR山手線ほか「上野」駅 入谷口 徒歩5分"
+ },
+ "walk_minutes": {
+  "value": 5,
+  "page": 1,
+  "confidence": "high",
+  "source": "「上野」駅 入谷口 徒歩5分"
+ },
+ "price_jpy": {
+  "value": 620000000,
+  "page": 1,
+  "confidence": "high",
+  "source": "価格　6億2,000万円（税込・建物消費税込）"
+ },
+ "price_note": {
+  "value": "税込・建物消費税込",
+  "page": 1,
+  "confidence": "high",
+  "source": "6億2,000万円（税込・建物消費税込）"
+ },
+ "land_area_sqm": {
+  "value": 168.9,
+  "page": 1,
+  "confidence": "high",
+  "source": "土地面積　168.90㎡（51.09坪）"
+ },
+ "building_area_sqm": {
+  "value": 712.35,
+  "page": 1,
+  "confidence": "high",
+  "source": "延床面積　712.35㎡（215.48坪）"
+ },
+ "zoning": {
+  "value": "商業地域",
+  "page": 1,
+  "confidence": "high",
+  "source": "用途地域　商業地域　建ぺい率80％　容積率500％"
+ },
+ "bcr_pct": {
+  "value": 80,
+  "page": 1,
+  "confidence": "high",
+  "source": "建ぺい率80％"
+ },
+ "far_pct": {
+  "value": 500,
+  "page": 1,
+  "confidence": "high",
+  "source": "容積率500％"
+ },
+ "road_frontage": {
+  "value": "西側 幅員6.5m 公道、間口7.8m",
+  "page": 1,
+  "confidence": "high",
+  "source": "西側 幅員6.5m 公道　間口7.8m"
+ },
+ "structure": {
+  "value": "鉄骨造 陸屋根",
+  "page": 1,
+  "confidence": "high",
+  "source": "鉄骨造 陸屋根 9階建"
+ },
+ "floors": {
+  "value": 9,
+  "page": 1,
+  "confidence": "high",
+  "source": "鉄骨造 陸屋根 9階建"
+ },
+ "built_date": {
+  "value": "2018-08",
+  "page": 1,
+  "confidence": "medium",
+  "source": "築年月　平成30年8月"
+ },
+ "units_or_rooms": {
+  "value": 38,
+  "page": 1,
+  "confidence": "high",
+  "source": "全38室（シングル22・ツイン14・ユニバーサル2）"
+ },
+ "gross_yield_pct": {
+  "value": 5.4,
+  "page": 1,
+  "confidence": "high",
+  "source": "表面利回り　5.4％"
+ },
+ "annual_income_jpy": {
+  "value": 33480000,
+  "page": 1,
+  "confidence": "medium",
+  "source": "満室想定年収　3,348万円（賃料ベース）"
+ },
+ "current_income_jpy": {
+  "value": null,
+  "page": 1,
+  "confidence": "high",
+  "source": "現況賃料　※現運営会社との契約賃料は面談にて開示"
+ },
+ "occupancy_pct": {
+  "value": 84.2,
+  "page": 1,
+  "confidence": "low",
+  "source": "2025年度の客室稼働率実績：平均84.2％（運営会社報告値）"
+ },
+ "handover": {
+  "value": "2027年1月末予定",
+  "page": 1,
+  "confidence": "high",
+  "source": "引渡し　2027年1月末予定"
+ },
+ "transaction_type": {
+  "value": "専任媒介",
+  "page": 1,
+  "confidence": "high",
+  "source": "取引態様　専任媒介"
+ },
+ "broker": {
+  "value": "株式会社グリーンヒル・リアルティ 投資営業部",
+  "page": 1,
+  "confidence": "high",
+  "source": "株式会社グリーンヒル・リアルティ"
+ },
+ "document_date": {
+  "value": "2026-10-16",
+  "page": 1,
+  "confidence": "medium",
+  "source": "令和8年10月16日"
+ },
+ "risk_flags": {
+  "value": [
+   "Current contract rent undisclosed until meeting",
+   "10-year fixed-term lease to operator runs to Aug 2034 — transfers to buyer",
+   "Occupancy 84.2% / ADR ¥12,600 are operator-reported, unverified",
+   "Permit upgraded from 簡易宿所 to 旅館業 — confirm permit documents",
+   "Broker disclaims accuracy of seller-provided figures"
+  ],
+  "page": 1,
+  "confidence": "high",
+  "source": "現運営会社との賃貸借契約は買主様に承継されます"
+ }
+}

@@ -1,0 +1,165 @@
+{
+ "property_name": {
+  "value": null,
+  "page": null,
+  "confidence": "high",
+  "source": "（物件名称の記載なし。書簡形式の土地紹介）"
+ },
+ "property_type": {
+  "value": "土地",
+  "page": 1,
+  "confidence": "high",
+  "source": "売却物件のご紹介（事業用地・宿泊施設用地）"
+ },
+ "address": {
+  "value": "東京都台東区浅草六丁目 外1筆（住居表示 台東区浅草6-○○-○）",
+  "page": 1,
+  "confidence": "high",
+  "source": "東京都台東区浅草六丁目 ○○番○○　外1筆"
+ },
+ "nearest_station": {
+  "value": "浅草駅（つくばエクスプレス）",
+  "page": 1,
+  "confidence": "high",
+  "source": "つくばエクスプレス「浅草」駅 徒歩6分"
+ },
+ "walk_minutes": {
+  "value": 6,
+  "page": 1,
+  "confidence": "high",
+  "source": "つくばエクスプレス「浅草」駅 徒歩6分"
+ },
+ "price_jpy": {
+  "value": null,
+  "page": 1,
+  "confidence": "high",
+  "source": "価格　応相談（売主希望価格は坪単価1,000万円前後を想定）"
+ },
+ "price_note": {
+  "value": "応相談。売主希望は坪単価1,000万円前後（実測147.94坪 → 約14.8億円の目安だが文書に総額の記載なし）",
+  "page": 1,
+  "confidence": "medium",
+  "source": "売主希望価格は坪単価1,000万円前後を想定"
+ },
+ "land_area_sqm": {
+  "value": 489.08,
+  "page": 1,
+  "confidence": "medium",
+  "source": "公簿 486.21㎡（147.07坪）　実測 489.08㎡（147.94坪）"
+ },
+ "building_area_sqm": {
+  "value": null,
+  "page": null,
+  "confidence": "high",
+  "source": "（更地・建物なし）"
+ },
+ "zoning": {
+  "value": "商業地域、防火地域",
+  "page": 1,
+  "confidence": "high",
+  "source": "用途地域　商業地域（建ぺい率80％・容積率600％）、防火地域"
+ },
+ "bcr_pct": {
+  "value": 80,
+  "page": 1,
+  "confidence": "high",
+  "source": "建ぺい率80％・容積率600％"
+ },
+ "far_pct": {
+  "value": 600,
+  "page": 1,
+  "confidence": "high",
+  "source": "建ぺい率80％・容積率600％"
+ },
+ "road_frontage": {
+  "value": "北側 区道 幅員約11.0m（間口約18.6m）、東側 区道 幅員約6.0m（間口約26.0m）、角地",
+  "page": 1,
+  "confidence": "high",
+  "source": "北側 区道 幅員約11.0m（間口約18.6m）、東側 区道 幅員約6.0m"
+ },
+ "structure": {
+  "value": null,
+  "page": null,
+  "confidence": "high",
+  "source": "（土地のため該当なし）"
+ },
+ "floors": {
+  "value": null,
+  "page": null,
+  "confidence": "high",
+  "source": "（土地のため該当なし）"
+ },
+ "built_date": {
+  "value": null,
+  "page": null,
+  "confidence": "high",
+  "source": "（土地のため該当なし）"
+ },
+ "units_or_rooms": {
+  "value": null,
+  "page": null,
+  "confidence": "high",
+  "source": "（土地のため該当なし）"
+ },
+ "gross_yield_pct": {
+  "value": null,
+  "page": null,
+  "confidence": "high",
+  "source": "（記載なし）"
+ },
+ "annual_income_jpy": {
+  "value": null,
+  "page": null,
+  "confidence": "high",
+  "source": "（記載なし）"
+ },
+ "current_income_jpy": {
+  "value": null,
+  "page": null,
+  "confidence": "high",
+  "source": "（記載なし。現況は時間貸し駐車場）"
+ },
+ "occupancy_pct": {
+  "value": null,
+  "page": null,
+  "confidence": "high",
+  "source": "（記載なし）"
+ },
+ "handover": {
+  "value": "2027年4月以降、更地引渡し（アスファルト撤去含む）",
+  "page": 1,
+  "confidence": "high",
+  "source": "２０２７年４月以降、更地引渡し（アスファルト撤去を含む）"
+ },
+ "transaction_type": {
+  "value": "媒介",
+  "page": 1,
+  "confidence": "high",
+  "source": "取引態様　媒介"
+ },
+ "broker": {
+  "value": "有限会社ひばり土地建物 営業二課",
+  "page": 1,
+  "confidence": "high",
+  "source": "有限会社ひばり土地建物　営業二課"
+ },
+ "document_date": {
+  "value": "2026-10-09",
+  "page": 1,
+  "confidence": "high",
+  "source": "2026年10月9日"
+ },
+ "risk_flags": {
+  "value": [
+   "Price not stated — negotiable, seller targets ~¥10M/tsubo",
+   "Land history: former small printing-plate factory; soil survey recommended",
+   "Part of lot registered as 雑種地 — land category change pending",
+   "Current parking-lot contract ends end of March 2027",
+   "Buyer must obtain Hotel Business Act (旅館業法) permit",
+   "Registered vs surveyed area differ (486.21 vs 489.08㎡)"
+  ],
+  "page": 1,
+  "confidence": "high",
+  "source": "地歴調査の結果、過去に小規模な製版工場があったことが判明"
+ }
+}
