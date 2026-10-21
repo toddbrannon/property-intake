@@ -128,7 +128,7 @@ def call_claude(pdf_path: Path, fields) -> dict:
     client = anthropic.Anthropic()
     pdf_b64 = base64.standard_b64encode(pdf_path.read_bytes()).decode()
     resp = client.messages.create(
-        model=MODEL, max_tokens=4000, temperature=0,
+        model=MODEL, max_tokens=4000,
         messages=[{"role": "user", "content": [
             {"type": "document", "source": {"type": "base64", "media_type": "application/pdf", "data": pdf_b64}},
             {"type": "text", "text": build_prompt(fields)},
