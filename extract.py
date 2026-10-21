@@ -125,7 +125,9 @@ def get_raw(pdf_path: Path, fields) -> tuple:
 
 def call_claude(pdf_path: Path, fields) -> dict:
     import anthropic
-    client = anthropic.Anthropic()
+    # Keys created outside a workspace must name one; set ANTHROPIC_WORKSPACE_ID (wrkspc_...) in that case.
+    ws = os.environ.get("ANTHROPIC_WORKSPACE_ID", "").strip()
+    client = anthropic.Anthropic(default_headers={"anthropic-workspace-id": ws} if ws else None)
     pdf_b64 = base64.standard_b64encode(pdf_path.read_bytes()).decode()
     resp = client.messages.create(
         model=MODEL, max_tokens=4000,
