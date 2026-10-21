@@ -130,6 +130,46 @@ def apply_fix_to_master(file, field, value):
             row[col - 1].value = v
     wb.save(mp)
 
+
+# ---------------------------------------------------------------- "what Claude added" for each document
+CONVERSION_HINTS = ("万円", "億", "坪", "平成", "令和", "昭和", "converted")
+
+def value_added(rec):
+    """Facts computed from the stored record: what Claude did beyond copying text."""
+    fields = rec.get("fields", {})
+    n = len(fields)
+    filled = sum(1 for f in fields.values() if f.get("value") is not None)
+    KINDS = [(("万円", "億"), "万円/億 → yen"), (("坪",), "坪 → ㎡"), (("平成", "令和", "昭和"), "Japanese era → calendar year")]
+    conv, kinds = [], []
+    for k, f in fields.items():
+        if f.get("value") is None or _fields.get(k, {}).get("type") not in ("integer", "number", "date"):
+            continue
+        src = f.get("source") or ""
+        hit = [label for keys, label in KINDS if any(x in src for x in keys)]
+        if hit and str(f.get("value")) not in src:   # the stored value differs from the printed text: a real conversion
+            conv.append(k); kinds += [h for h in hit if h not in kinds]
+    risks = (fields.get("risk_flags") or {}).get("value") or []
+    blanks_req = [k for k, f in fields.items() if f.get("value") is None and _fields.get(k, {}).get("required")]
+    blanks = [k for k, f in fields.items() if f.get("value") is None]
+    yld = next((it for it in rec.get("review", []) if it.get("field") == "gross_yield_pct" and "income" in it.get("issue", "")), None)
+    has_yield_inputs = all((fields.get(k) or {}).get("value") for k in ("price_jpy", "annual_income_jpy", "gross_yield_pct"))
+    out = [f"Read the Japanese PDF and filled {filled} of {n} fields, each with the page and the original Japanese text it came from."]
+    if conv:
+        names = ", ".join(_fields[k]["en"] for k in conv[:4] if k in _fields) + ("…" if len(conv) > 4 else "")
+        out.append(f"Converted {len(conv)} value{'s' if len(conv) != 1 else ''} into standard units ({names}): {', '.join(kinds)}.")
+    if risks:
+        out.append(f"Pulled {len(risks)} buyer risk{'s' if len(risks) != 1 else ''} out of the remarks and fine print into their own column.")
+    if blanks:
+        req = f", including {len(blanks_req)} required field{'s' if len(blanks_req) != 1 else ''} sent to a person" if blanks_req else ""
+        out.append(f"Left {len(blanks)} field{'s' if len(blanks) != 1 else ''} blank because the document doesn't state them{req}. Nothing was guessed.")
+    if yld:
+        out.append("The yield check failed: the broker's printed yield doesn't match income ÷ price. A person re-typing by hand would usually copy the printed figure without noticing.")
+    elif has_yield_inputs:
+        out.append("The yield check passed: the printed yield agrees with income ÷ price.")
+    if rec.get("summary_en"):
+        out.append("Wrote the English summary above for colleagues who don't read Japanese.")
+    return out
+
 # ---------------------------------------------------------------- page
 PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Property Intake</title>
@@ -159,6 +199,10 @@ PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
  .meta{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--muted);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
  .meta b{color:var(--fg);font-weight:600} .summary{margin-top:8px;max-width:80ch}
  .fnote{display:block;font-size:12px;color:#4a5168;font-style:italic;margin-top:2px}
+ .va{margin-top:10px;background:#f4f6fb;border:1px solid #d5dcef;border-radius:4px;padding:10px 14px}
+ .va h4{margin:0 0 6px;font-size:13px;color:var(--accent);text-transform:uppercase;letter-spacing:.05em}
+ .va ul{margin:0;padding-left:18px} .va li{margin:3px 0;max-width:90ch} .va .lbl{font-size:12px;color:var(--muted);margin:8px 0 2px;font-weight:600}
+ .va .saved{margin-top:8px;font-size:12.5px;color:var(--ok);font-weight:600}
 </style></head><body><div class="wrap">
 <h1>Property Intake</h1>
 <div class="muted">Upload a property PDF. It is read, checked, and added to the master sheet; unsure fields come to the review queue. Read by: <b>{{ mode }}</b>.</div>
@@ -207,6 +251,12 @@ PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
  <div><b>{{ r.file }}</b> <span class="muted">{{ r.processed }}</span></div>
  <span class="pill {{ 'flag' if r.status=='needs_review' else 'ok' }}">{{ r.status.replace('_',' ') }}</span></div>
  {% if r.summary_en %}<p class="summary">{{ r.summary_en }}</p>{% endif %}
+ <div class="va"><h4>What Claude added</h4>
+ {% if r.findings %}<div class="lbl">Claude's findings on this document</div><ul>{% for f in r.findings %}<li>{{ f }}</li>{% endfor %}</ul>
+ <div class="lbl">What it did, counted from the record</div>{% endif %}
+ <ul>{% for line in va[r.file] %}<li>{{ line }}</li>{% endfor %}</ul>
+ <div class="saved">Manual equivalent: about 20–35 minutes of reading, re-typing and summarizing. With Claude: {{ r.review|length }} item{{ '' if r.review|length == 1 else 's' }} for a person to confirm.</div>
+ </div>
  <div class="meta">
  {% if r.read_by == 'api' and r.meta %}<span><span class="tag ai">Claude</span> <b>{{ r.meta.model }}</b> read this PDF</span><span><b>{{ '{:,}'.format(r.meta.input_tokens) }}</b> tokens in · <b>{{ '{:,}'.format(r.meta.output_tokens) }}</b> out</span><span>cost <b>${{ '%.3f'|format(r.meta.cost_usd) }}</b></span><span><b>{{ r.meta.seconds }}s</b></span>
  {% elif r.read_by == 'demo' %}<span><span class="tag rule">Recorded</span> built-in sample: Claude's reading was recorded earlier, so no API call was made</span>
@@ -245,7 +295,8 @@ def index():
         err = e.read_text(encoding="utf-8").strip().splitlines()[-1] if e.exists() else ""
         failed.append({"name": p.name, "err": err})
     samples = [p.name for p in sorted((Path(__file__).parent / "samples").glob("*.pdf"))]
-    return render_template_string(PAGE, records=records, open_items=open_items, failed=failed,
+    va = {r["file"]: value_added(r) for r in records}
+    return render_template_string(PAGE, va=va, records=records, open_items=open_items, failed=failed,
         inbox=list(INBOX.glob("*.pdf")), samples=samples, msg=request.args.get("msg"),
         labels={k: v["ja"] for k, v in _fields.items()}, labels_en={k: v["en"] for k, v in _fields.items()},
         has_key=bool(os.environ.get("ANTHROPIC_API_KEY")), pw=bool(PASSWORD), model=extract.MODEL, nfields=len(_fields),

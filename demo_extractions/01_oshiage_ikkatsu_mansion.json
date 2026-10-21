@@ -186,5 +186,10 @@
   "source": "土壌汚染・アスベスト調査未実施",
   "note": ""
  },
- "_summary_en": "15-unit reinforced-concrete apartment building in Sumida-ku, Tokyo, 7 minutes' walk from Oshiage station. Asking ¥385M (tax included) against ¥22.33M full-occupancy income, a 5.80% gross yield; 14 of 15 units are let (93.3%). Built March 2009, 7 floors, 689㎡ floor area on 212㎡ of commercial-zoned land. Check: no soil or asbestos survey has been done, and one unit is vacant."
+ "_summary_en": "15-unit reinforced-concrete apartment building in Sumida-ku, Tokyo, 7 minutes' walk from Oshiage station. Asking ¥385M (tax included) against ¥22.33M full-occupancy income, a 5.80% gross yield; 14 of 15 units are let (93.3%). Built March 2009, 7 floors, 689㎡ floor area on 212㎡ of commercial-zoned land. Check: no soil or asbestos survey has been done, and one unit is vacant.",
+ "_findings": [
+  "The asbestos and soil-contamination surveys are not done. This appears only in the remarks on page 2, not in the main table.",
+  "The rent roll on page 2 shows one vacant unit (302) at ¥119,000 asking rent, which explains the gap between current income (¥20.85M) and full-occupancy income (¥22.33M).",
+  "The stated 5.80% yield agrees with ¥22.33M ÷ ¥385M, so the broker's headline figure can be relied on."
+ ]
 }

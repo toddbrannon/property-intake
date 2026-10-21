@@ -77,11 +77,13 @@ TYPE_CHECK = {
 # ---------------------------------------------------------------- the prompt
 PROMPT = """You are extracting data from a Japanese real-estate property document (物件概要書 or similar).
 Return ONLY a JSON object with exactly these keys: {keys}
-plus one extra key "_summary_en".
+plus two extra keys "_summary_en" and "_findings".
 
 For EVERY field key return an object: {{"value": <value or null>, "page": <int or null>, "confidence": "high"|"medium"|"low", "source": "<the exact Japanese text you read, at most 60 characters>", "note": "<see rules>"}}
 
 "_summary_en": 2-4 plain English sentences summarizing the property for a colleague who does not read Japanese: what it is, where, price, size, income or yield if stated, and the main items a buyer should check. Use only facts stated in the document.
+
+"_findings": a list of 2-4 short English sentences describing what you contributed beyond copying text: the things a busy reader skimming this Japanese PDF would most likely miss or get wrong (a figure buried in the remarks, a unit or era-date conversion, two numbers that conflict, a risk stated only in fine print, a value you deliberately left blank and why). Be specific and factual; no praise or filler.
 
 Field guide (key: Japanese label, type):
 {guide}
@@ -208,7 +210,7 @@ def validate(raw: dict, pdf_name: str, fields) -> dict:
              "empty": sum(1 for f in record.values() if f["value"] is None)}
     return {"file": pdf_name, "processed": datetime.datetime.now().isoformat(timespec="seconds"),
             "fields": record, "review": review, "status": "needs_review" if review else "auto_accepted",
-            "summary_en": raw.get("_summary_en", ""), "meta": raw.get("_meta", {}), "stats": stats}
+            "summary_en": raw.get("_summary_en", ""), "findings": raw.get("_findings", []) if isinstance(raw.get("_findings"), list) else [], "meta": raw.get("_meta", {}), "stats": stats}
 
 # ---------------------------------------------------------------- outputs
 def append_master(result: dict, fields):

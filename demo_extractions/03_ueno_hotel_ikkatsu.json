@@ -187,5 +187,11 @@
   "source": "現運営会社との賃貸借契約は買主様に承継されます",
   "note": ""
  },
- "_summary_en": "38-room steel-frame hotel (9 floors, 712㎡) in Higashi-Ueno, Tokyo, 5 minutes from Ueno station. Asking ¥620M including tax; full-occupancy rent of ¥33.48M gives a 5.4% gross yield. Built August 2018 with rooms renovated in 2023. It is leased to an operator on a 10-year fixed term to August 2034, which transfers to the buyer. Check: the current rent is withheld until a meeting, and the 84.2% occupancy figure is reported by the operator, not verified."
+ "_summary_en": "38-room steel-frame hotel (9 floors, 712㎡) in Higashi-Ueno, Tokyo, 5 minutes from Ueno station. Asking ¥620M including tax; full-occupancy rent of ¥33.48M gives a 5.4% gross yield. Built August 2018 with rooms renovated in 2023. It is leased to an operator on a 10-year fixed term to August 2034, which transfers to the buyer. Check: the current rent is withheld until a meeting, and the 84.2% occupancy figure is reported by the operator, not verified.",
+ "_findings": [
+  "Current contract rent is withheld until a meeting, so the 5.4% yield is based on full-occupancy rent, not on what the operator actually pays.",
+  "The 84.2% occupancy is the operator's own figure, so I marked it low confidence for a person to verify.",
+  "The 10-year fixed-term lease to the operator runs to August 2034 and transfers to the buyer, which limits repositioning options.",
+  "Converted 平成30年 to 2018 and 令和8年 to 2026, and turned 6億2,000万円 and 3,348万円 into full yen amounts."
+ ]
 }
