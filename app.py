@@ -103,9 +103,11 @@ def load_review():
 
 def save_review(rows):
     rp = OUT / "review.csv"
-    cols = ["file", "field", "label_ja", "issue", "source_text", "page", "decision", "corrected_value"]
+    cols = extract.REVIEW_COLS
     with rp.open("w", encoding="utf-8-sig", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=cols); w.writeheader(); w.writerows(rows)
+        w = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore"); w.writeheader()
+        for r in rows:
+            w.writerow({k: r.get(k, "") for k in cols})
 
 def apply_fix_to_master(file, field, value):
     """Write a corrected value into master.xlsx for that document's row."""
@@ -147,6 +149,16 @@ PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
  .src{color:var(--muted);font-size:12px} input[type=text]{font:inherit;padding:4px 6px;border:1px solid var(--line);border-radius:3px;width:180px}
  .inline{display:inline-flex;gap:6px;align-items:center;flex-wrap:wrap} .msg{background:var(--oks);color:var(--ok);padding:8px 12px;margin-top:10px}
  .tw{overflow-x:auto} details summary{cursor:pointer;color:var(--accent)}
+ .how{background:#fff;border:1px solid var(--line);border-left:4px solid var(--accent);padding:14px 18px;margin-top:14px}
+ .how summary{font-weight:600;color:var(--accent);font-size:15px}
+ .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px} @media(max-width:760px){.steps{grid-template-columns:1fr 1fr}}
+ .step{background:var(--bg);padding:10px 12px;border-radius:4px} .step b{display:block;margin-bottom:2px} .step.ai{background:#e4e9f6;outline:1px solid #b9c4e3}
+ .tag{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:1px 6px;border-radius:3px;margin-right:4px}
+ .tag.ai{background:#e4e9f6;color:var(--accent)} .tag.rule{background:#eceae4;color:#5a4f2e}
+ .why{font-size:13px;color:var(--muted);margin-top:4px;max-width:70ch} .cnote{font-size:13px;margin-top:4px;padding:6px 10px;background:#f6f7fa;border-left:3px solid #b9c4e3;max-width:70ch}
+ .meta{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--muted);margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+ .meta b{color:var(--fg);font-weight:600} .summary{margin-top:8px;max-width:80ch}
+ .fnote{display:block;font-size:12px;color:#4a5168;font-style:italic;margin-top:2px}
 </style></head><body><div class="wrap">
 <h1>Property Intake</h1>
 <div class="muted">Upload a property PDF. It is read, checked, and added to the master sheet; unsure fields come to the review queue. Read by: <b>{{ mode }}</b>.</div>
@@ -162,13 +174,26 @@ PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
 {% if not has_key %}<div class="muted" style="margin-top:8px">No API key set: the three sample documents work; other PDFs will go to Failed until <code>ANTHROPIC_API_KEY</code> is added in Render → Environment.</div>{% endif %}
 </div>
 
+<details class="how" open><summary>How this works: what Claude does, and what it doesn't</summary>
+<div class="steps">
+ <div class="step"><b>1 · Upload</b>The PDF is saved to the inbox. A background worker picks it up within about 20 seconds.</div>
+ <div class="step ai"><b>2 · Claude reads it</b>One call to the Claude API ({{ model }}). Claude reads the Japanese PDF directly, no translation step, and returns all {{ nfields }} fields. For each one it gives the value, the page, the exact Japanese text it read, a confidence level, and a note when it's unsure. It also writes an English summary.</div>
+ <div class="step"><b>3 · The script checks Claude</b>Plain Python, not AI: types and units, required fields, allowed categories, and arithmetic (yield = income ÷ price). Claude is never trusted on its own.</div>
+ <div class="step"><b>4 · A person decides the rest</b>Only fields that Claude was unsure of, or that a rule caught, reach the review queue. Everything else goes straight to the spreadsheet.</div>
+</div>
+<p class="why" style="margin-top:10px"><span class="tag ai">Claude</span> marks items Claude itself flagged as uncertain. <span class="tag rule">Rule</span> marks items caught by a check in the script. Confidence: <span class="pill ok">high</span> read directly · <span class="pill warn">medium</span> converted (坪→㎡, 平成→year, 万円→yen) · <span class="pill flag">low</span> ambiguous, sent to review. The ground rule in Claude's instructions: <b>if the document doesn't say it, leave it blank and never guess.</b></p>
+</details>
+
 <h2>Review queue <span class="muted">({{ open_items|length }} open)</span></h2>
 {% if not open_items %}<div class="card muted">Nothing waiting. Everything processed so far was accepted automatically.</div>{% endif %}
 {% for it in open_items %}
 <div class="card"><form method="post" action="{{ url_for('decide') }}" class="inline">
  <input type="hidden" name="file" value="{{ it.file }}"><input type="hidden" name="field" value="{{ it.field }}">
  <div style="flex:1 1 340px"><b>{{ it.label_ja }}</b> <span class="muted">({{ it.field }})</span> · {{ it.file }}<br>
- <span class="flag pill">{{ it.issue }}</span><br><span class="src">p.{{ it.page or '–' }}  {{ it.source_text }}</span></div>
+ <span class="tag {{ 'ai' if it.raised_by and 'Claude' in it.raised_by else 'rule' }}">{{ 'Claude' if it.raised_by and 'Claude' in it.raised_by else 'Rule' }}</span><span class="flag pill">{{ it.issue }}</span><br>
+ <span class="src">p.{{ it.page or '–' }}  {{ it.source_text }}</span>
+ {% if it.why %}<div class="why"><b>Why it's here ({{ it.raised_by }}):</b> {{ it.why }}</div>{% endif %}
+ {% if it.claude_note %}<div class="cnote"><b>{{ 'The calculation' if it.raised_by == 'Arithmetic cross-check' else "Claude's note" }}:</b> {{ it.claude_note }}</div>{% endif %}</div>
  <input type="text" name="value" placeholder="corrected value">
  <button class="btn" name="decision" value="fix">Save fix</button>
  <button class="btn sec" name="decision" value="ok">OK as is</button>
@@ -181,10 +206,18 @@ PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
 <div class="card"><div class="inline" style="justify-content:space-between">
  <div><b>{{ r.file }}</b> <span class="muted">{{ r.processed }}</span></div>
  <span class="pill {{ 'flag' if r.status=='needs_review' else 'ok' }}">{{ r.status.replace('_',' ') }}</span></div>
+ {% if r.summary_en %}<p class="summary">{{ r.summary_en }}</p>{% endif %}
+ <div class="meta">
+ {% if r.read_by == 'api' and r.meta %}<span><span class="tag ai">Claude</span> <b>{{ r.meta.model }}</b> read this PDF</span><span><b>{{ '{:,}'.format(r.meta.input_tokens) }}</b> tokens in · <b>{{ '{:,}'.format(r.meta.output_tokens) }}</b> out</span><span>cost <b>${{ '%.3f'|format(r.meta.cost_usd) }}</b></span><span><b>{{ r.meta.seconds }}s</b></span>
+ {% elif r.read_by == 'demo' %}<span><span class="tag rule">Recorded</span> built-in sample: Claude's reading was recorded earlier, so no API call was made</span>
+ {% elif r.read_by == 'manual' %}<span><span class="tag ai">Claude</span> read by hand in the Claude app and pasted in</span>{% endif %}
+ {% if r.stats %}<span>Fields: <b>{{ r.stats.high }}</b> high · <b>{{ r.stats.medium }}</b> medium · <b>{{ r.stats.low }}</b> low · <b>{{ r.stats.empty }}</b> not in document</span>{% endif %}
+ <span>Sent to review: <b>{{ r.review|length }}</b></span>
+ </div>
  <details><summary>{{ r.fields|length }} fields</summary><div class="tw"><table><tr><th>Field</th><th>Value</th><th>Source · page</th><th>Conf.</th></tr>
  {% for k, f in r.fields.items() %}<tr><td>{{ labels[k] }}<br><span class="src">{{ labels_en[k] }}</span></td>
  <td>{% if f.value is none %}<span class="muted">— not in document</span>{% elif f.value is iterable and f.value is not string %}{{ f.value|join('; ') }}{% else %}{{ f.value }}{% endif %}</td>
- <td class="src">p.{{ f.page or '–' }}  {{ f.source }}</td>
+ <td class="src">p.{{ f.page or '–' }}  {{ f.source }}{% if f.note %}<span class="fnote">Claude: {{ f.note }}</span>{% endif %}</td>
  <td><span class="pill {{ 'ok' if f.confidence=='high' else ('warn' if f.confidence=='medium' else 'flag') }}">{{ f.confidence }}</span></td></tr>{% endfor %}
  </table></div></details></div>
 {% endfor %}
@@ -215,7 +248,7 @@ def index():
     return render_template_string(PAGE, records=records, open_items=open_items, failed=failed,
         inbox=list(INBOX.glob("*.pdf")), samples=samples, msg=request.args.get("msg"),
         labels={k: v["ja"] for k, v in _fields.items()}, labels_en={k: v["en"] for k, v in _fields.items()},
-        has_key=bool(os.environ.get("ANTHROPIC_API_KEY")), pw=bool(PASSWORD),
+        has_key=bool(os.environ.get("ANTHROPIC_API_KEY")), pw=bool(PASSWORD), model=extract.MODEL, nfields=len(_fields),
         mode="Claude API" if os.environ.get("ANTHROPIC_API_KEY") else "samples only (no API key)")
 
 @app.route("/upload", methods=["POST"])

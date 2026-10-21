@@ -3,151 +3,176 @@
   "value": "ホテル・グリーンリーフ上野",
   "page": 1,
   "confidence": "high",
-  "source": "ホテル・グリーンリーフ上野（運営中・オーナーチェンジ）"
+  "source": "ホテル・グリーンリーフ上野（運営中・オーナーチェンジ）",
+  "note": ""
  },
  "property_type": {
   "value": "一棟ホテル",
   "page": 1,
   "confidence": "high",
-  "source": "一棟ホテル（簡易宿所→旅館業許可取得済）"
+  "source": "一棟ホテル（簡易宿所→旅館業許可取得済）",
+  "note": ""
  },
  "address": {
   "value": "東京都台東区東上野四丁目",
   "page": 1,
   "confidence": "high",
-  "source": "東京都台東区東上野四丁目○番○"
+  "source": "東京都台東区東上野四丁目○番○",
+  "note": ""
  },
  "nearest_station": {
   "value": "上野駅 入谷口（JR山手線ほか）",
   "page": 1,
   "confidence": "high",
-  "source": "JR山手線ほか「上野」駅 入谷口 徒歩5分"
+  "source": "JR山手線ほか「上野」駅 入谷口 徒歩5分",
+  "note": ""
  },
  "walk_minutes": {
   "value": 5,
   "page": 1,
   "confidence": "high",
-  "source": "「上野」駅 入谷口 徒歩5分"
+  "source": "「上野」駅 入谷口 徒歩5分",
+  "note": ""
  },
  "price_jpy": {
   "value": 620000000,
   "page": 1,
   "confidence": "high",
-  "source": "価格　6億2,000万円（税込・建物消費税込）"
+  "source": "価格　6億2,000万円（税込・建物消費税込）",
+  "note": ""
  },
  "price_note": {
   "value": "税込・建物消費税込",
   "page": 1,
   "confidence": "high",
-  "source": "6億2,000万円（税込・建物消費税込）"
+  "source": "6億2,000万円（税込・建物消費税込）",
+  "note": ""
  },
  "land_area_sqm": {
   "value": 168.9,
   "page": 1,
   "confidence": "high",
-  "source": "土地面積　168.90㎡（51.09坪）"
+  "source": "土地面積　168.90㎡（51.09坪）",
+  "note": ""
  },
  "building_area_sqm": {
   "value": 712.35,
   "page": 1,
   "confidence": "high",
-  "source": "延床面積　712.35㎡（215.48坪）"
+  "source": "延床面積　712.35㎡（215.48坪）",
+  "note": ""
  },
  "zoning": {
   "value": "商業地域",
   "page": 1,
   "confidence": "high",
-  "source": "用途地域　商業地域　建ぺい率80％　容積率500％"
+  "source": "用途地域　商業地域　建ぺい率80％　容積率500％",
+  "note": ""
  },
  "bcr_pct": {
   "value": 80,
   "page": 1,
   "confidence": "high",
-  "source": "建ぺい率80％"
+  "source": "建ぺい率80％",
+  "note": ""
  },
  "far_pct": {
   "value": 500,
   "page": 1,
   "confidence": "high",
-  "source": "容積率500％"
+  "source": "容積率500％",
+  "note": ""
  },
  "road_frontage": {
   "value": "西側 幅員6.5m 公道、間口7.8m",
   "page": 1,
   "confidence": "high",
-  "source": "西側 幅員6.5m 公道　間口7.8m"
+  "source": "西側 幅員6.5m 公道　間口7.8m",
+  "note": ""
  },
  "structure": {
   "value": "鉄骨造 陸屋根",
   "page": 1,
   "confidence": "high",
-  "source": "鉄骨造 陸屋根 9階建"
+  "source": "鉄骨造 陸屋根 9階建",
+  "note": ""
  },
  "floors": {
   "value": 9,
   "page": 1,
   "confidence": "high",
-  "source": "鉄骨造 陸屋根 9階建"
+  "source": "鉄骨造 陸屋根 9階建",
+  "note": ""
  },
  "built_date": {
   "value": "2018-08",
   "page": 1,
   "confidence": "medium",
-  "source": "築年月　平成30年8月"
+  "source": "築年月　平成30年8月",
+  "note": "Converted from the Japanese era date 平成30年8月 (Heisei 30) to 2018-08."
  },
  "units_or_rooms": {
   "value": 38,
   "page": 1,
   "confidence": "high",
-  "source": "全38室（シングル22・ツイン14・ユニバーサル2）"
+  "source": "全38室（シングル22・ツイン14・ユニバーサル2）",
+  "note": ""
  },
  "gross_yield_pct": {
   "value": 5.4,
   "page": 1,
   "confidence": "high",
-  "source": "表面利回り　5.4％"
+  "source": "表面利回り　5.4％",
+  "note": ""
  },
  "annual_income_jpy": {
   "value": 33480000,
   "page": 1,
   "confidence": "medium",
-  "source": "満室想定年収　3,348万円（賃料ベース）"
+  "source": "満室想定年収　3,348万円（賃料ベース）",
+  "note": "Converted from 3,348万円 to ¥33,480,000."
  },
  "current_income_jpy": {
   "value": null,
   "page": 1,
   "confidence": "high",
-  "source": "現況賃料　※現運営会社との契約賃料は面談にて開示"
+  "source": "現況賃料　※現運営会社との契約賃料は面談にて開示",
+  "note": "The document says the current contract rent will only be disclosed at a meeting."
  },
  "occupancy_pct": {
   "value": 84.2,
   "page": 1,
   "confidence": "low",
-  "source": "2025年度の客室稼働率実績：平均84.2％（運営会社報告値）"
+  "source": "2025年度の客室稼働率実績：平均84.2％（運営会社報告値）",
+  "note": "84.2% is the operator's own reported figure for FY2025, not an independently verified number, so it should be confirmed."
  },
  "handover": {
   "value": "2027年1月末予定",
   "page": 1,
   "confidence": "high",
-  "source": "引渡し　2027年1月末予定"
+  "source": "引渡し　2027年1月末予定",
+  "note": ""
  },
  "transaction_type": {
   "value": "専任媒介",
   "page": 1,
   "confidence": "high",
-  "source": "取引態様　専任媒介"
+  "source": "取引態様　専任媒介",
+  "note": ""
  },
  "broker": {
   "value": "株式会社グリーンヒル・リアルティ 投資営業部",
   "page": 1,
   "confidence": "high",
-  "source": "株式会社グリーンヒル・リアルティ"
+  "source": "株式会社グリーンヒル・リアルティ",
+  "note": ""
  },
  "document_date": {
   "value": "2026-10-16",
   "page": 1,
   "confidence": "medium",
-  "source": "令和8年10月16日"
+  "source": "令和8年10月16日",
+  "note": "Converted from the Japanese era date 令和8年10月16日 (Reiwa 8) to 2026-10-16."
  },
  "risk_flags": {
   "value": [
@@ -159,6 +184,8 @@
   ],
   "page": 1,
   "confidence": "high",
-  "source": "現運営会社との賃貸借契約は買主様に承継されます"
- }
+  "source": "現運営会社との賃貸借契約は買主様に承継されます",
+  "note": ""
+ },
+ "_summary_en": "38-room steel-frame hotel (9 floors, 712㎡) in Higashi-Ueno, Tokyo, 5 minutes from Ueno station. Asking ¥620M including tax; full-occupancy rent of ¥33.48M gives a 5.4% gross yield. Built August 2018 with rooms renovated in 2023. It is leased to an operator on a 10-year fixed term to August 2034, which transfers to the buyer. Check: the current rent is withheld until a meeting, and the 84.2% occupancy figure is reported by the operator, not verified."
 }

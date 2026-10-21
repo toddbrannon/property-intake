@@ -3,151 +3,176 @@
   "value": null,
   "page": null,
   "confidence": "high",
-  "source": "（物件名称の記載なし。書簡形式の土地紹介）"
+  "source": "（物件名称の記載なし。書簡形式の土地紹介）",
+  "note": "The document is a letter introducing a plot of land and never gives the property a name."
  },
  "property_type": {
   "value": "土地",
   "page": 1,
   "confidence": "high",
-  "source": "売却物件のご紹介（事業用地・宿泊施設用地）"
+  "source": "売却物件のご紹介（事業用地・宿泊施設用地）",
+  "note": ""
  },
  "address": {
   "value": "東京都台東区浅草六丁目 外1筆（住居表示 台東区浅草6-○○-○）",
   "page": 1,
   "confidence": "high",
-  "source": "東京都台東区浅草六丁目 ○○番○○　外1筆"
+  "source": "東京都台東区浅草六丁目 ○○番○○　外1筆",
+  "note": ""
  },
  "nearest_station": {
   "value": "浅草駅（つくばエクスプレス）",
   "page": 1,
   "confidence": "high",
-  "source": "つくばエクスプレス「浅草」駅 徒歩6分"
+  "source": "つくばエクスプレス「浅草」駅 徒歩6分",
+  "note": ""
  },
  "walk_minutes": {
   "value": 6,
   "page": 1,
   "confidence": "high",
-  "source": "つくばエクスプレス「浅草」駅 徒歩6分"
+  "source": "つくばエクスプレス「浅草」駅 徒歩6分",
+  "note": ""
  },
  "price_jpy": {
   "value": null,
   "page": 1,
   "confidence": "high",
-  "source": "価格　応相談（売主希望価格は坪単価1,000万円前後を想定）"
+  "source": "価格　応相談（売主希望価格は坪単価1,000万円前後を想定）",
+  "note": "The price is listed as 応相談 (negotiable). Only a per-tsubo target is given, so no total is entered; multiplying it out would be a guess."
  },
  "price_note": {
   "value": "応相談。売主希望は坪単価1,000万円前後（実測147.94坪 → 約14.8億円の目安だが文書に総額の記載なし）",
   "page": 1,
   "confidence": "medium",
-  "source": "売主希望価格は坪単価1,000万円前後を想定"
+  "source": "売主希望価格は坪単価1,000万円前後を想定",
+  "note": "Records the seller's per-tsubo target as stated. The total of about ¥1.48B is shown only as an indication, not entered as the price."
  },
  "land_area_sqm": {
   "value": 489.08,
   "page": 1,
   "confidence": "medium",
-  "source": "公簿 486.21㎡（147.07坪）　実測 489.08㎡（147.94坪）"
+  "source": "公簿 486.21㎡（147.07坪）　実測 489.08㎡（147.94坪）",
+  "note": "Two areas are given: registered 486.21㎡ and surveyed 489.08㎡. The surveyed figure was used."
  },
  "building_area_sqm": {
   "value": null,
   "page": null,
   "confidence": "high",
-  "source": "（更地・建物なし）"
+  "source": "（更地・建物なし）",
+  "note": "Vacant land, so there is no building."
  },
  "zoning": {
   "value": "商業地域、防火地域",
   "page": 1,
   "confidence": "high",
-  "source": "用途地域　商業地域（建ぺい率80％・容積率600％）、防火地域"
+  "source": "用途地域　商業地域（建ぺい率80％・容積率600％）、防火地域",
+  "note": ""
  },
  "bcr_pct": {
   "value": 80,
   "page": 1,
   "confidence": "high",
-  "source": "建ぺい率80％・容積率600％"
+  "source": "建ぺい率80％・容積率600％",
+  "note": ""
  },
  "far_pct": {
   "value": 600,
   "page": 1,
   "confidence": "high",
-  "source": "建ぺい率80％・容積率600％"
+  "source": "建ぺい率80％・容積率600％",
+  "note": ""
  },
  "road_frontage": {
   "value": "北側 区道 幅員約11.0m（間口約18.6m）、東側 区道 幅員約6.0m（間口約26.0m）、角地",
   "page": 1,
   "confidence": "high",
-  "source": "北側 区道 幅員約11.0m（間口約18.6m）、東側 区道 幅員約6.0m"
+  "source": "北側 区道 幅員約11.0m（間口約18.6m）、東側 区道 幅員約6.0m",
+  "note": ""
  },
  "structure": {
   "value": null,
   "page": null,
   "confidence": "high",
-  "source": "（土地のため該当なし）"
+  "source": "（土地のため該当なし）",
+  "note": "Not stated in the document."
  },
  "floors": {
   "value": null,
   "page": null,
   "confidence": "high",
-  "source": "（土地のため該当なし）"
+  "source": "（土地のため該当なし）",
+  "note": "Not stated in the document."
  },
  "built_date": {
   "value": null,
   "page": null,
   "confidence": "high",
-  "source": "（土地のため該当なし）"
+  "source": "（土地のため該当なし）",
+  "note": "Not stated in the document."
  },
  "units_or_rooms": {
   "value": null,
   "page": null,
   "confidence": "high",
-  "source": "（土地のため該当なし）"
+  "source": "（土地のため該当なし）",
+  "note": "Not stated in the document."
  },
  "gross_yield_pct": {
   "value": null,
   "page": null,
   "confidence": "high",
-  "source": "（記載なし）"
+  "source": "（記載なし）",
+  "note": "Not stated in the document."
  },
  "annual_income_jpy": {
   "value": null,
   "page": null,
   "confidence": "high",
-  "source": "（記載なし）"
+  "source": "（記載なし）",
+  "note": "Not stated in the document."
  },
  "current_income_jpy": {
   "value": null,
   "page": null,
   "confidence": "high",
-  "source": "（記載なし。現況は時間貸し駐車場）"
+  "source": "（記載なし。現況は時間貸し駐車場）",
+  "note": "Not stated in the document."
  },
  "occupancy_pct": {
   "value": null,
   "page": null,
   "confidence": "high",
-  "source": "（記載なし）"
+  "source": "（記載なし）",
+  "note": "Not stated in the document."
  },
  "handover": {
   "value": "2027年4月以降、更地引渡し（アスファルト撤去含む）",
   "page": 1,
   "confidence": "high",
-  "source": "２０２７年４月以降、更地引渡し（アスファルト撤去を含む）"
+  "source": "２０２７年４月以降、更地引渡し（アスファルト撤去を含む）",
+  "note": ""
  },
  "transaction_type": {
   "value": "媒介",
   "page": 1,
   "confidence": "high",
-  "source": "取引態様　媒介"
+  "source": "取引態様　媒介",
+  "note": ""
  },
  "broker": {
   "value": "有限会社ひばり土地建物 営業二課",
   "page": 1,
   "confidence": "high",
-  "source": "有限会社ひばり土地建物　営業二課"
+  "source": "有限会社ひばり土地建物　営業二課",
+  "note": ""
  },
  "document_date": {
   "value": "2026-10-09",
   "page": 1,
   "confidence": "high",
-  "source": "2026年10月9日"
+  "source": "2026年10月9日",
+  "note": ""
  },
  "risk_flags": {
   "value": [
@@ -160,6 +185,8 @@
   ],
   "page": 1,
   "confidence": "high",
-  "source": "地歴調査の結果、過去に小規模な製版工場があったことが判明"
- }
+  "source": "地歴調査の結果、過去に小規模な製版工場があったことが判明",
+  "note": ""
+ },
+ "_summary_en": "Corner lot of about 489㎡ (surveyed) in Asakusa 6-chome, Tokyo, 6 minutes from Tsukuba Express Asakusa, zoned commercial (80% / 600%) with frontage on two roads. Currently a pay parking lot until March 2027, with vacant-land handover from April 2027. No total price is stated: the seller targets around ¥10M per tsubo. Check: the site was once a small printing-plate workshop, so a soil survey is recommended, and the buyer must obtain the hotel permit."
 }

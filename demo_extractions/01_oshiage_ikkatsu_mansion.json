@@ -3,151 +3,176 @@
   "value": "メゾン押上レジデンス",
   "page": 1,
   "confidence": "high",
-  "source": "メゾン押上レジデンス"
+  "source": "メゾン押上レジデンス",
+  "note": ""
  },
  "property_type": {
   "value": "一棟マンション",
   "page": 1,
   "confidence": "high",
-  "source": "物件概要書　【一棟収益マンション】"
+  "source": "物件概要書　【一棟収益マンション】",
+  "note": ""
  },
  "address": {
   "value": "東京都墨田区押上三丁目（住居表示：墨田区押上3-○-○）",
   "page": 1,
   "confidence": "high",
-  "source": "東京都墨田区押上三丁目 ○番○（地番）"
+  "source": "東京都墨田区押上三丁目 ○番○（地番）",
+  "note": ""
  },
  "nearest_station": {
   "value": "押上駅（東京メトロ半蔵門線・都営浅草線）",
   "page": 1,
   "confidence": "high",
-  "source": "東京メトロ半蔵門線・都営浅草線「押上」駅 徒歩7分"
+  "source": "東京メトロ半蔵門線・都営浅草線「押上」駅 徒歩7分",
+  "note": ""
  },
  "walk_minutes": {
   "value": 7,
   "page": 1,
   "confidence": "high",
-  "source": "「押上」駅 徒歩7分"
+  "source": "「押上」駅 徒歩7分",
+  "note": ""
  },
  "price_jpy": {
   "value": 385000000,
   "page": 1,
   "confidence": "high",
-  "source": "販売価格　385,000,000円（税込）"
+  "source": "販売価格　385,000,000円（税込）",
+  "note": ""
  },
  "price_note": {
   "value": "税込",
   "page": 1,
   "confidence": "high",
-  "source": "385,000,000円（税込）"
+  "source": "385,000,000円（税込）",
+  "note": ""
  },
  "land_area_sqm": {
   "value": 212.45,
   "page": 1,
   "confidence": "high",
-  "source": "土地面積　212.45㎡（64.26坪）公簿"
+  "source": "土地面積　212.45㎡（64.26坪）公簿",
+  "note": ""
  },
  "building_area_sqm": {
   "value": 689.12,
   "page": 1,
   "confidence": "high",
-  "source": "延床面積　689.12㎡（208.46坪）"
+  "source": "延床面積　689.12㎡（208.46坪）",
+  "note": ""
  },
  "zoning": {
   "value": "商業地域",
   "page": 1,
   "confidence": "high",
-  "source": "用途地域　商業地域"
+  "source": "用途地域　商業地域",
+  "note": ""
  },
  "bcr_pct": {
   "value": 80,
   "page": 1,
   "confidence": "high",
-  "source": "建ぺい率／容積率　80％／500％"
+  "source": "建ぺい率／容積率　80％／500％",
+  "note": ""
  },
  "far_pct": {
   "value": 500,
   "page": 1,
   "confidence": "high",
-  "source": "建ぺい率／容積率　80％／500％"
+  "source": "建ぺい率／容積率　80％／500％",
+  "note": ""
  },
  "road_frontage": {
   "value": "南側 公道 幅員約8.0m、接道間口約12.4m",
   "page": 1,
   "confidence": "high",
-  "source": "南側 公道 幅員約8.0m　接道間口約12.4m"
+  "source": "南側 公道 幅員約8.0m　接道間口約12.4m",
+  "note": ""
  },
  "structure": {
   "value": "鉄筋コンクリート造 陸屋根",
   "page": 1,
   "confidence": "high",
-  "source": "鉄筋コンクリート造 陸屋根 7階建"
+  "source": "鉄筋コンクリート造 陸屋根 7階建",
+  "note": ""
  },
  "floors": {
   "value": 7,
   "page": 1,
   "confidence": "high",
-  "source": "鉄筋コンクリート造 陸屋根 7階建"
+  "source": "鉄筋コンクリート造 陸屋根 7階建",
+  "note": ""
  },
  "built_date": {
   "value": "2009-03",
   "page": 1,
   "confidence": "high",
-  "source": "築年月　2009年3月（築17年）"
+  "source": "築年月　2009年3月（築17年）",
+  "note": ""
  },
  "units_or_rooms": {
   "value": 15,
   "page": 1,
   "confidence": "high",
-  "source": "総戸数　15戸（1K×12戸、1LDK×3戸）"
+  "source": "総戸数　15戸（1K×12戸、1LDK×3戸）",
+  "note": ""
  },
  "gross_yield_pct": {
   "value": 5.8,
   "page": 1,
   "confidence": "high",
-  "source": "表面利回り　5.80％（満室想定）"
+  "source": "表面利回り　5.80％（満室想定）",
+  "note": ""
  },
  "annual_income_jpy": {
   "value": 22330000,
   "page": 1,
   "confidence": "high",
-  "source": "満室想定年収　22,330,000円"
+  "source": "満室想定年収　22,330,000円",
+  "note": ""
  },
  "current_income_jpy": {
   "value": 20845000,
   "page": 1,
   "confidence": "high",
-  "source": "現況年収　20,845,000円（2026年9月時点・稼働率93.3％）"
+  "source": "現況年収　20,845,000円（2026年9月時点・稼働率93.3％）",
+  "note": ""
  },
  "occupancy_pct": {
   "value": 93.3,
   "page": 1,
   "confidence": "high",
-  "source": "稼働率93.3％"
+  "source": "稼働率93.3％",
+  "note": ""
  },
  "handover": {
   "value": "相談",
   "page": 2,
   "confidence": "high",
-  "source": "引渡し　相談"
+  "source": "引渡し　相談",
+  "note": ""
  },
  "transaction_type": {
   "value": "媒介",
   "page": 2,
   "confidence": "high",
-  "source": "取引態様　媒介"
+  "source": "取引態様　媒介",
+  "note": ""
  },
  "broker": {
   "value": "サクラミライ不動産株式会社 収益物件部",
   "page": 1,
   "confidence": "high",
-  "source": "サクラミライ不動産株式会社　収益物件部"
+  "source": "サクラミライ不動産株式会社　収益物件部",
+  "note": ""
  },
  "document_date": {
   "value": "2026-10-14",
   "page": 1,
   "confidence": "high",
-  "source": "作成日：2026年10月14日"
+  "source": "作成日：2026年10月14日",
+  "note": ""
  },
  "risk_flags": {
   "value": [
@@ -158,6 +183,8 @@
   ],
   "page": 2,
   "confidence": "high",
-  "source": "土壌汚染・アスベスト調査未実施"
- }
+  "source": "土壌汚染・アスベスト調査未実施",
+  "note": ""
+ },
+ "_summary_en": "15-unit reinforced-concrete apartment building in Sumida-ku, Tokyo, 7 minutes' walk from Oshiage station. Asking ¥385M (tax included) against ¥22.33M full-occupancy income, a 5.80% gross yield; 14 of 15 units are let (93.3%). Built March 2009, 7 floors, 689㎡ floor area on 212㎡ of commercial-zoned land. Check: no soil or asbestos survey has been done, and one unit is vacant."
 }

@@ -14,7 +14,7 @@ For each PDF this script:
 
 Settings come from the .env file in this folder (see .env.example).
 """
-import argparse, base64, csv, json, os, re, sys, datetime
+import argparse, base64, csv, json, os, re, sys, datetime, time
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
@@ -31,6 +31,8 @@ def load_env():
 load_env()
 
 MODEL   = os.environ.get("CLAUDE_MODEL", "claude-sonnet-5-5")
+# List price per million tokens for the model above (Sonnet 5.5), used only to display cost per document.
+PRICE_IN, PRICE_OUT = float(os.environ.get("PRICE_IN", "2")), float(os.environ.get("PRICE_OUT", "10"))
 OUT_DIR = Path(os.environ.get("OUTPUT_DIR", HERE / "output"))
 MASTER  = OUT_DIR / "master.xlsx"
 REVIEW  = OUT_DIR / "review.csv"
@@ -75,8 +77,11 @@ TYPE_CHECK = {
 # ---------------------------------------------------------------- the prompt
 PROMPT = """You are extracting data from a Japanese real-estate property document (物件概要書 or similar).
 Return ONLY a JSON object with exactly these keys: {keys}
+plus one extra key "_summary_en".
 
-For EVERY key return an object: {{"value": <value or null>, "page": <int or null>, "confidence": "high"|"medium"|"low", "source": "<the exact Japanese text you read, at most 60 characters>"}}
+For EVERY field key return an object: {{"value": <value or null>, "page": <int or null>, "confidence": "high"|"medium"|"low", "source": "<the exact Japanese text you read, at most 60 characters>", "note": "<see rules>"}}
+
+"_summary_en": 2-4 plain English sentences summarizing the property for a colleague who does not read Japanese: what it is, where, price, size, income or yield if stated, and the main items a buyer should check. Use only facts stated in the document.
 
 Field guide (key: Japanese label, type):
 {guide}
@@ -91,6 +96,7 @@ Rules. Follow them exactly:
 - list fields: a list of short English phrases, or [].
 - Use "low" confidence whenever the text is ambiguous, partly obscured, or the value needed interpretation.
 - Write "source" in the document's original Japanese. Do not translate it.
+- "note": when confidence is not "high", or value is null, one short English sentence saying why (what was converted, what was ambiguous, or that the document does not state it). Otherwise "".
 """
 
 def build_prompt(fields):
@@ -129,6 +135,7 @@ def call_claude(pdf_path: Path, fields) -> dict:
     ws = os.environ.get("ANTHROPIC_WORKSPACE_ID", "").strip()
     client = anthropic.Anthropic(default_headers={"anthropic-workspace-id": ws} if ws else None)
     pdf_b64 = base64.standard_b64encode(pdf_path.read_bytes()).decode()
+    t0 = time.time()
     resp = client.messages.create(
         model=MODEL, max_tokens=4000,
         messages=[{"role": "user", "content": [
@@ -138,38 +145,70 @@ def call_claude(pdf_path: Path, fields) -> dict:
     )
     text = "".join(b.text for b in resp.content if b.type == "text")
     text = re.sub(r"^```(?:json)?|```$", "", text.strip(), flags=re.M).strip()
-    return json.loads(text)
+    raw = json.loads(text)
+    u = getattr(resp, "usage", None)
+    tin, tout = getattr(u, "input_tokens", 0) or 0, getattr(u, "output_tokens", 0) or 0
+    raw["_meta"] = {"model": getattr(resp, "model", MODEL), "input_tokens": tin, "output_tokens": tout,
+                    "seconds": round(time.time() - t0, 1),
+                    "cost_usd": round(tin / 1e6 * PRICE_IN + tout / 1e6 * PRICE_OUT, 4)}
+    return raw
 
 # ---------------------------------------------------------------- validate
+# Plain-English explanations shown on the review page: who raised the item, and why.
+WHY = {
+    "required": ("Rule in the field list",
+                 "This field is marked required in fields.csv. Claude returned it empty because the document does not state it, "
+                 "so a person decides what to enter. The system never fills a required field by guessing."),
+    "low":      ("Claude's own judgment",
+                 "Claude marked its reading as low confidence, meaning the text was ambiguous or needed interpretation. "
+                 "Anything Claude is unsure of is sent to a person instead of being accepted."),
+    "type":     ("Validation check",
+                 "Claude's answer was not the expected kind of value (for example text where a number belongs), so it was "
+                 "discarded rather than written to the spreadsheet."),
+    "enum":     ("Validation check",
+                 "The value is not one of the allowed options in fields.csv, so a person picks the right category."),
+    "yield":    ("Arithmetic cross-check",
+                 "The script recomputed yield as annual income divided by price. It disagrees with the yield printed in the "
+                 "document by more than 0.15 points, so either a figure or the broker's yield is wrong."),
+}
+
 def validate(raw: dict, pdf_name: str, fields) -> dict:
     record, review = {}, []
+    def flag(key, kind, issue, cell):
+        by, why = WHY[kind]
+        review.append({"field": key, "label": fields[key]["ja"], "issue": issue, "source": cell.get("source", ""),
+                       "page": cell.get("page"), "raised_by": by, "why": why, "claude_note": cell.get("note", "")})
     for key, spec in fields.items():
         cell = raw.get(key) or {}
         val, page, conf, src = cell.get("value"), cell.get("page"), cell.get("confidence", "low"), cell.get("source", "")
-        problem = None
+        kind = issue = None
         if val is None:
             if spec["required"]:
-                problem = "required field missing from document"
+                kind, issue = "required", "required field missing from document"
         elif not TYPE_CHECK[spec["type"]](val):
-            problem = f"type mismatch: expected {spec['type']}, got {type(val).__name__}"
+            kind, issue = "type", f"type mismatch: expected {spec['type']}, got {type(val).__name__}"
             val = None
         elif spec["type"] == "enum" and val not in spec["options"]:
-            problem = f"'{val}' is not one of {spec['options']}"
+            kind, issue = "enum", f"'{val}' is not one of {spec['options']}"
         elif conf == "low":
-            problem = "low confidence - confirm against source"
-        record[key] = {"value": val, "page": page, "confidence": conf, "source": src}
-        if problem:
-            review.append({"field": key, "label": spec["ja"], "issue": problem, "source": src, "page": page})
+            kind, issue = "low", "low confidence - confirm against source"
+        record[key] = {"value": val, "page": page, "confidence": conf, "source": src, "note": cell.get("note", "")}
+        if kind:
+            flag(key, kind, issue, cell)
     # Cross-check: stated yield vs income / price (only if all three present)
     g = lambda k: record.get(k, {}).get("value")
     p, inc, y = g("price_jpy"), g("annual_income_jpy"), g("gross_yield_pct")
-    if p and inc and y:
+    if p and inc and y and "gross_yield_pct" in fields:
         implied = round(inc / p * 100, 2)
         if abs(implied - y) > 0.15:
-            review.append({"field": "gross_yield_pct", "label": fields["gross_yield_pct"]["ja"],
-                           "issue": f"stated yield {y}% but income/price implies {implied}%", "source": "", "page": record["gross_yield_pct"]["page"]})
+            flag("gross_yield_pct", "yield", f"stated yield {y}% but income ÷ price = {implied}%",
+                 {**record["gross_yield_pct"], "note": f"¥{inc:,} ÷ ¥{p:,} = {implied}%, document says {y}%."})
+    confs = [f["confidence"] for f in record.values()]
+    stats = {"high": confs.count("high"), "medium": confs.count("medium"), "low": confs.count("low"),
+             "empty": sum(1 for f in record.values() if f["value"] is None)}
     return {"file": pdf_name, "processed": datetime.datetime.now().isoformat(timespec="seconds"),
-            "fields": record, "review": review, "status": "needs_review" if review else "auto_accepted"}
+            "fields": record, "review": review, "status": "needs_review" if review else "auto_accepted",
+            "summary_en": raw.get("_summary_en", ""), "meta": raw.get("_meta", {}), "stats": stats}
 
 # ---------------------------------------------------------------- outputs
 def append_master(result: dict, fields):
@@ -191,14 +230,22 @@ def append_master(result: dict, fields):
     ws.append(row)
     wb.save(MASTER)
 
+REVIEW_COLS = ["file", "field", "label_ja", "issue", "source_text", "page", "raised_by", "why", "claude_note",
+               "decision", "corrected_value"]
+
 def append_review(result: dict):
-    new = not REVIEW.exists()
-    with REVIEW.open("a", newline="", encoding="utf-8-sig") as f:
-        w = csv.writer(f)
-        if new:
-            w.writerow(["file", "field", "label_ja", "issue", "source_text", "page", "decision", "corrected_value"])
-        for it in result["review"]:
-            w.writerow([result["file"], it["field"], it["label"], it["issue"], it["source"], it["page"] or "", "", ""])
+    rows = []
+    if REVIEW.exists():
+        with REVIEW.open(encoding="utf-8-sig", newline="") as f:
+            rows = list(csv.DictReader(f))
+    for it in result["review"]:
+        rows.append({"file": result["file"], "field": it["field"], "label_ja": it["label"], "issue": it["issue"],
+                     "source_text": it["source"], "page": it["page"] or "", "raised_by": it.get("raised_by", ""),
+                     "why": it.get("why", ""), "claude_note": it.get("claude_note", ""), "decision": "", "corrected_value": ""})
+    with REVIEW.open("w", newline="", encoding="utf-8-sig") as f:
+        w = csv.DictWriter(f, fieldnames=REVIEW_COLS, extrasaction="ignore"); w.writeheader()
+        for r in rows:
+            w.writerow({k: r.get(k, "") for k in REVIEW_COLS})
 
 def process(pdf: Path, fields) -> dict:
     raw, how = get_raw(pdf, fields)
@@ -208,7 +255,9 @@ def process(pdf: Path, fields) -> dict:
     (OUT_DIR / f"{pdf.stem}.json").write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
     append_master(result, fields)
     append_review(result)
-    log(f"{pdf.name}: {result['status']} ({len(result['review'])} items for review) [read by: {how}]")
+    m = result.get("meta") or {}
+    extra = f", {m.get('input_tokens',0)}+{m.get('output_tokens',0)} tokens, ${m.get('cost_usd',0)}, {m.get('seconds',0)}s" if how == "api" and m else ""
+    log(f"{pdf.name}: {result['status']} ({len(result['review'])} items for review) [read by: {how}{extra}]")
     return result
 
 def main():
