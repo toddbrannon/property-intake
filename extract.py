@@ -249,6 +249,35 @@ def append_review(result: dict):
         for r in rows:
             w.writerow({k: r.get(k, "") for k in REVIEW_COLS})
 
+
+# ---------------------------------------------------------------- Google Sheets (optional)
+# Set SHEETS_WEBHOOK_URL and SHEETS_TOKEN (see google_sheet_apps_script.js). Unset = off.
+def sheets_header(fields):
+    return ["Document", "Processed", "Status", "English summary"] + [f'{v["ja"]} / {v["en"]}' for v in fields.values()]
+
+def sheets_post(payload: dict):
+    url = os.environ.get("SHEETS_WEBHOOK_URL", "").strip()
+    if not url:
+        return
+    import urllib.request
+    payload = {**payload, "token": os.environ.get("SHEETS_TOKEN", "")}
+    req = urllib.request.Request(url, data=json.dumps(payload, ensure_ascii=False).encode(), method="POST",
+                                 headers={"Content-Type": "application/json"})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            reply = r.read().decode(errors="replace")[:200]
+        if '"ok":true' not in reply.replace(" ", ""):
+            log(f"Google Sheet did not accept the write: {reply}")
+    except Exception as e:
+        log(f"Google Sheet write failed (spreadsheet still updated): {e}")
+
+def append_sheet(result: dict, fields):
+    row = [result["file"], result["processed"], result["status"], result.get("summary_en", "")]
+    for k in fields:
+        v = result["fields"][k]["value"]
+        row.append("; ".join(v) if isinstance(v, list) else ("" if v is None else v))
+    sheets_post({"action": "append", "header": sheets_header(fields), "row": row})
+
 def process(pdf: Path, fields) -> dict:
     raw, how = get_raw(pdf, fields)
     result = validate(raw, pdf.name, fields)
@@ -256,6 +285,7 @@ def process(pdf: Path, fields) -> dict:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     (OUT_DIR / f"{pdf.stem}.json").write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
     append_master(result, fields)
+    append_sheet(result, fields)
     append_review(result)
     m = result.get("meta") or {}
     extra = f", {m.get('input_tokens',0)}+{m.get('output_tokens',0)} tokens, ${m.get('cost_usd',0)}, {m.get('seconds',0)}s" if how == "api" and m else ""

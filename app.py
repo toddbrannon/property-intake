@@ -110,7 +110,14 @@ def save_review(rows):
             w.writerow({k: r.get(k, "") for k in cols})
 
 def apply_fix_to_master(file, field, value):
-    """Write a corrected value into master.xlsx for that document's row."""
+    """Write a corrected value into master.xlsx and, if connected, the Google Sheet."""
+    try:
+        v = float(value) if value.replace(".", "", 1).replace("-", "", 1).isdigit() else value
+    except Exception:
+        v = value
+    if field in _fields:   # mirror the correction to the Google Sheet, if one is connected
+        extract.sheets_post({"action": "update", "file": file,
+                             "column": f'{_fields[field]["ja"]} / {_fields[field]["en"]}', "value": v})
     from openpyxl import load_workbook
     mp = OUT / "master.xlsx"
     if not mp.exists():
@@ -123,13 +130,8 @@ def apply_fix_to_master(file, field, value):
     col = header.index(label) + 1
     for row in ws.iter_rows(min_row=2):
         if row[0].value == file:
-            try:
-                v = float(value) if value.replace(".", "", 1).replace("-", "", 1).isdigit() else value
-            except Exception:
-                v = value
             row[col - 1].value = v
     wb.save(mp)
-
 
 # ---------------------------------------------------------------- "what Claude added" for each document
 CONVERSION_HINTS = ("万円", "億", "坪", "平成", "令和", "昭和", "converted")
@@ -212,6 +214,7 @@ PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name=
  <input type="file" name="pdf" accept="application/pdf" required>
  <button class="btn" type="submit">Upload PDF</button>
  <span class="muted">Waiting in inbox: {{ inbox|length }} · Failed: {{ failed|length }}</span>
+ {% if sheet_url %}<a class="btn" style="background:#1e8e3e;border-color:#1e8e3e" href="{{ sheet_url }}" target="_blank" rel="noopener">Open Google Sheet</a>{% endif %}
  <a class="btn sec" href="{{ url_for('download') }}">Download master.xlsx</a>
  <a class="btn sec" href="{{ url_for('index') }}">Refresh</a>{% if pw %} <a class="btn sec" href="{{ url_for('logout') }}">Sign out</a>{% endif %}
 </form>
@@ -299,7 +302,7 @@ def index():
     return render_template_string(PAGE, va=va, records=records, open_items=open_items, failed=failed,
         inbox=list(INBOX.glob("*.pdf")), samples=samples, msg=request.args.get("msg"),
         labels={k: v["ja"] for k, v in _fields.items()}, labels_en={k: v["en"] for k, v in _fields.items()},
-        has_key=bool(os.environ.get("ANTHROPIC_API_KEY")), pw=bool(PASSWORD), model=extract.MODEL, nfields=len(_fields),
+        has_key=bool(os.environ.get("ANTHROPIC_API_KEY")), pw=bool(PASSWORD), model=extract.MODEL, nfields=len(_fields), sheet_url=os.environ.get("SHEETS_URL", ""),
         mode="Claude API" if os.environ.get("ANTHROPIC_API_KEY") else "samples only (no API key)")
 
 @app.route("/upload", methods=["POST"])
